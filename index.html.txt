@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ГДЗ</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, Arial, sans-serif;
+            background: #ffffff;
+            padding: 16px;
+            margin: 0;
+        }
+        h1 { text-align: center; font-size: 22px; margin-bottom: 20px; }
+        h2 { font-size: 16px; margin: 0 0 10px 0; }
+        .card {
+            background: #f1f1f1;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 14px;
+        }
+        button {
+            padding: 10px 16px;
+            margin: 4px 4px 4px 0;
+            border: none;
+            border-radius: 10px;
+            background: #2ea6ff;
+            color: white;
+            font-size: 15px;
+            cursor: pointer;
+        }
+        button.selected { background: #0066cc; }
+        input {
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        #result {
+            background: #f1f1f1;
+            border-radius: 12px;
+            padding: 16px;
+            display: none;
+            margin-top: 16px;
+            word-break: break-all;
+        }
+        a { color: #2ea6ff; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>📚 ГДЗ</h1>
+
+    <div class="card">
+        <h2>Предмет</h2>
+        <div id="subjectButtons">
+            <button data-value="algebra">📐 Алгебра</button>
+            <button data-value="russian">📚 Русский язык</button>
+            <button data-value="belarusian">📖 Белорусский язык</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Номер задания</h2>
+        <input type="number" id="taskNumber" placeholder="Например: 15" min="1">
+    </div>
+
+    <div id="result"></div>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.ready();
+        tg.expand();
+
+        let selectedSubject = null;
+
+        // Выбор предмета
+        document.querySelectorAll('#subjectButtons button').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('#subjectButtons button').forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+                selectedSubject = btn.dataset.value;
+                updateLink();
+            });
+        });
+
+        // Ввод номера
+        document.getElementById('taskNumber').addEventListener('input', updateLink);
+
+        function updateLink() {
+            const number = document.getElementById('taskNumber').value.trim();
+            const resultDiv = document.getElementById('result');
+
+            if (!number || !selectedSubject) {
+                resultDiv.style.display = 'none';
+                return;
+            }
+
+            let url = '';
+
+            if (selectedSubject === 'algebra') {
+                // АЛГЕБРА
+                url = `https://resheba.top/GDZ/10-algebra-2020/glava1/${number}.png`;
+            } else if (selectedSubject === 'russian') {
+                // РУССКИЙ ЯЗЫК
+                url = `https://resheba.top/GDZ/10-rus-2020/1/${number}.png`;
+            } else if (selectedSubject === 'belarusian') {
+                // БЕЛОРУССКИЙ ЯЗЫК
+                url = `https://resheba.top/GDZ/10-bel-2020/1/${number}.png`;
+            }
+
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = `🔗 <a href="${url}" target="_blank">Открыть решение №${number}</a>`;
+        }
+    </script>
+</body>
+</html>
